@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'base',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -62,6 +63,21 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 # ============================================================================================================== #
+
+# ================================================ AUTH ================================================ #
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ], 
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'base.authenticate.CookiesAuthentication',
+    )
+}
+
+SIMPLE_JWT = {
+    'USER_ID_FIELD':'username'
+}
+# ====================================================================================================== #
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
