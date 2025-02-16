@@ -11,7 +11,7 @@ const UserProfile = () => {
 
     return (
         <Flex w="100vw" justify="center" minH="100vh" py={10} flexDirection='column' alignItems='center'>
-            <VStack w={{ base: "90%", md: "75%", lg: "60%" }} spacing={6} color="white">
+            <VStack w='60svw' spacing={6} color="white">
                 {/* User Details Section */}
                 <UserDetails username={username} />
             </VStack>
@@ -77,7 +77,7 @@ const UserDetails = ({ username }) => {
     }
 
     return (
-        <VStack align="center" w="100%" spacing={5} p={6} bg="gray.900" borderRadius="lg" boxShadow="lg">
+        <VStack align="center" w={{ base: "90svw", sm: "80svw", md: "60svw" }} spacing={5} p={6} bg="gray.900" borderRadius="lg" boxShadow="lg">
             {/* Profile Image & Username */}
             <VStack spacing={3}>
                 <Box boxSize="120px" border="2px solid" borderColor="gray.600" borderRadius="full" overflow="hidden">
@@ -151,7 +151,7 @@ const UserPosts = ({ username }) => {
 
     return (
         <Flex
-            w='90%'
+            w={{ base: "90svw", sm: "80svw", md: "60svw" }}
             direction="column"
             align="center"
             p={4}

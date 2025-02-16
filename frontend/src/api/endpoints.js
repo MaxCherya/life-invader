@@ -66,3 +66,13 @@ export const toggleLike = async (id) => {
     const response = await api.post(`/toggle-like/`, { id })
     return response.data
 }
+
+export const createPost = async (description) => {
+    const response = await api.post(`/create-post/`, { description })
+    return response.data
+}
+
+export const getPosts = async (num) => {
+    const response = await api.get(`/get-posts/?page=${num}`)
+    return response.data
+}

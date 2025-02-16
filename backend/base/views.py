@@ -2,6 +2,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
+from rest_framework.pagination import PageNumberPagination
+
 from .models import MyUser, Post
 from .serializers import MyUserProfileSerializer, UserRegisterSerializer, PostSerializer
 
@@ -145,7 +147,7 @@ def toggleLike(request):
             return Response({'error': 'post is not found'})
         
         try:
-                user = MyUser.objects.get(username=request.user.username)
+            user = MyUser.objects.get(username=request.user.username)
         except MyUser.DoesNotExist:
             return Response({'error':'users has not found'})
         
@@ -157,3 +159,51 @@ def toggleLike(request):
             return Response({'now_liked':True})
     except:
         return Response({'error': 'error liking the post'})
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_post(request):
+    try:
+        data = request.data
+
+        try:
+            user = MyUser.objects.get(username=request.user.username)
+        except MyUser.DoesNotExist:
+            return Response({'error': 'user does not exist'})
+
+        post = Post.objects.create(
+            user=user,
+            description=data['description']
+        )
+
+        serializer = PostSerializer(post, many=False)
+
+        return Response({'success':True})
+    except:
+        return Response({'error': 'error creating post'})
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getPosts(request):
+    try:
+        posts = Post.objects.all().order_by('-created_at')
+
+        paginator = PageNumberPagination()
+        paginator.page_size = 2
+
+        result_pages = paginator.paginate_queryset(posts, request)
+        serializer = PostSerializer(result_pages, many=True)
+
+        try:
+            my_user = MyUser.objects.get(username=request.user.username)
+        except MyUser.DoesNotExist:
+            return Response({'error':'users has not found'})
+
+        data = []
+        for post in serializer.data:
+            liked = my_user.username in post.get('likes', [])
+            data.append({**post, 'liked': liked})
+
+        return paginator.get_paginated_response(data)
+    except:
+        return Response({'error': 'failed loading posts'})

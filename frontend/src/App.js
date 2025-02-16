@@ -9,6 +9,8 @@ import LoginPage from './routes/login';
 import RegisterPage from './routes/register';
 import { AuthProvider } from "./contexts/useAuth";
 import PrivateRoute from './components/private_route';
+import CreatePostPage from './routes/create_post';
+import Feed from './routes/feed';
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
             <Route element={<Layout><PrivateRoute><UserProfile /></PrivateRoute></Layout>} path='/:username' />
             <Route element={<LoginPage />} path='/login' />
             <Route element={<RegisterPage />} path='/register' />
+            <Route element={<Layout><PrivateRoute><CreatePostPage /></PrivateRoute></Layout>} path='/create-post' />
+            <Route element={<Layout><PrivateRoute><Feed /></PrivateRoute></Layout>} path='/feed' />
           </Routes>
         </AuthProvider>
       </Router>

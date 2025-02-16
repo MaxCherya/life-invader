@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
         const data = await login(username, password)
         if (data.success) {
             setAuth(true)
-            navigate(`/${username}/`)
+            navigate('/feed')
         } else {
             alert('Invalid username or password')
         }

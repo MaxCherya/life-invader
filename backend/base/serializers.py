@@ -53,7 +53,7 @@ class PostSerializer(serializers.ModelSerializer):
         return obj.likes.count()
     
     def get_formatted_date(self, obj):
-        return obj.created_at.strftime("%d %b %y")
+        return obj.created_at.strftime('%Y-%m-%d %H:%M:%S')
     
     def get_profile_image(self, obj):
         return obj.user.profile_image.url if obj.user.profile_image else None

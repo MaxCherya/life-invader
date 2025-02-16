@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 
 from .views import (get_user_profile_data, CustomTokenObtainPairView, 
                     CustomTokenRefreshView, register, authenticated, toggleFollow, 
-                    get_users_posts, toggleLike)
+                    get_users_posts, toggleLike, create_post, getPosts)
 
 urlpatterns = [
     path('user_data/<str:pk>/', get_user_profile_data),
@@ -16,4 +16,6 @@ urlpatterns = [
     path('toggle-follow/', toggleFollow),
     path('posts/<str:pk>/', get_users_posts),
     path('toggle-like/', toggleLike),
+    path('create-post/', create_post),
+    path('get-posts/', getPosts),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
