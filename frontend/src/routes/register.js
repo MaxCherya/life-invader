@@ -20,10 +20,22 @@ const RegisterPage = () => {
     const handleRegister = async () => {
         const { username, email, first_name, last_name, password } = formData;
         try {
-            await register(username, email, first_name, last_name, password)
-            navigate('/login')
+            const data = await register(username, email, first_name, last_name, password);
+            if (data.email || data.username || data.first_name || data.last_name) {
+                let errorMessage = "";
+                for (const key in data) {
+                    if (Array.isArray(data[key])) {
+                        errorMessage += `${data[key].join(", ")}\n`;
+                    } else {
+                        errorMessage += `${data[key]}\n`;
+                    }
+                }
+                alert(errorMessage);
+            } else {
+                navigate('/login');
+            }
         } catch (error) {
-            console.log("error")
+            alert("An error occurred. Please try again.");
         }
     };
 

@@ -1,20 +1,14 @@
 import { useState } from "react";
 import { Box, Input, Button, VStack, Heading, Text, Link, Divider } from "@chakra-ui/react";
-import { login } from "../api/endpoints";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/useAuth";
 
 const LoginPage = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const navigate = useNavigate();
+    const { auth_login } = useAuth();
 
     const handleLogin = async () => {
-        const data = await login(username, password)
-        if (data.success) {
-            navigate(`/${username}`)
-        } else {
-            alert('Invalid email or password')
-        }
+        auth_login(username, password)
     };
 
     return (

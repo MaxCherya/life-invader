@@ -1,20 +1,12 @@
-import { Flex, Text, VStack, Box, Heading, HStack, Image, Button, Divider } from "@chakra-ui/react"
+import { Flex, Text, VStack, Box, Heading, HStack, Image, Button, Divider, Spacer } from "@chakra-ui/react"
 import { useEffect, useState } from "react";
-import { get_user_profile_data } from "../api/endpoints";
+import { get_user_profile_data, toggleFollow } from "../api/endpoints";
 import { SERVER_URL } from "../constants/constants";
+import { useParams } from "react-router-dom";
 
 const UserProfile = () => {
 
-    const get_username_from_url = () => {
-        const url_split = window.location.pathname.split('/');
-        return url_split[url_split.length - 1]
-    }
-
-    const [username, setUsername] = useState(get_username_from_url)
-
-    useEffect(() => (
-        setUsername(get_username_from_url())
-    ), [])
+    const { username } = useParams();
 
     return (
         <Flex w="100%" justify="center" minH="100vh" py={10}>
@@ -34,6 +26,24 @@ const UserDetails = ({ username }) => {
     const [profileImage, setProfileImage] = useState('')
     const [followerCount, setFollowerCount] = useState(0)
     const [followingCount, setFollowingCount] = useState(0)
+    const [isOurProfile, setIsOurProfile] = useState(false)
+    const [isFollowing, setIsFollowing] = useState(false)
+
+    const handleToggleFollow = async () => {
+        try {
+            const data = await toggleFollow(username);
+            if (data.now_following) {
+                setFollowerCount(followerCount + 1)
+                setIsFollowing(true)
+            }
+            else {
+                setFollowerCount(followerCount - 1)
+                setIsFollowing(false)
+            }
+        } catch (err) {
+            console.log('error')
+        }
+    }
 
     useEffect(() => {
 
@@ -44,6 +54,8 @@ const UserDetails = ({ username }) => {
                 setProfileImage(data.profile_image)
                 setFollowerCount(data.follower_count)
                 setFollowingCount(data.following_count)
+                setIsOurProfile(data.is_our_profile)
+                setIsFollowing(data.isFollowing)
             } catch (error) {
                 console.log("error")
             } finally {
@@ -82,10 +94,27 @@ const UserDetails = ({ username }) => {
                 <StatBox label="Following" count={loading ? '-' : followingCount} />
             </HStack>
 
-            {/* Edit Profile Button */}
-            <Button w="full" colorScheme="red" bg="red.600" _hover={{ bg: "red.700" }}>
-                Edit Profile
-            </Button>
+            {loading ? <Spacer /> : isOurProfile ?
+                /* Edit Profile Button */
+                <Button w="full" colorScheme="red" bg="gray.700" _hover={{ bg: "gray.600" }}>
+                    Edit Profile
+                </Button>
+                :
+                /* Follow Button */
+                <Button
+                    w="full"
+                    colorScheme="red"
+                    bg={isFollowing ? "gray.700" : "red.600"}
+                    _hover={{ bg: isFollowing ? "gray.600" : "red.700" }}
+                    fontSize="lg"
+                    fontWeight="bold"
+                    transition="all 0.2s ease-in-out"
+                    boxShadow="md"
+                    _active={{ transform: "scale(0.95)" }}
+                    onClick={handleToggleFollow}
+                >
+                    {isFollowing ? 'Unfollow' : 'Follow'}
+                </Button>}
         </VStack>
     )
 }

@@ -27,6 +27,11 @@ api.interceptors.response.use(
     }
 )
 
+export const get_auth = async () => {
+    const response = await api.get('authenticated/')
+    return response.data
+}
+
 export const get_user_profile_data = async (username) => {
     const response = await api.get(`user_data/${username}/`)
     return response.data
@@ -44,5 +49,10 @@ export const login = async (username, password) => {
 
 export const register = async (username, email, first_name, last_name, password) => {
     const response = await api.post(`/register/`, { username, email, first_name, last_name, password });
+    return response.data
+}
+
+export const toggleFollow = async (username) => {
+    const response = await api.post(`/toggle-follow/`, { username });
     return response.data
 }
