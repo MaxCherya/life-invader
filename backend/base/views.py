@@ -2,8 +2,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
-from .models import MyUser
-from .serializers import MyUserProfileSerializer, UserRegisterSerializer
+from .models import MyUser, Post
+from .serializers import MyUserProfileSerializer, UserRegisterSerializer, PostSerializer
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -114,3 +114,46 @@ def toggleFollow(request):
             return Response({'now_following':True})
     except:
         return Response({'error':'error following user'})
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_users_posts(request, pk):
+    try:
+        user = MyUser.objects.get(username=pk)
+        my_user = MyUser.objects.get(username=request.user.username)
+        posts = user.posts.all().order_by('-created_at')
+        serializer = PostSerializer(posts, many=True)
+
+        data = []
+        for post in serializer.data:
+            liked = my_user.username in post.get('likes', [])
+            data.append({**post, 'liked': liked})
+
+        return Response(data)
+    except MyUser.DoesNotExist:
+        return Response({'error': 'user does not exist'}, status=404)
+    except Exception as e:
+        return Response({'error': f'Error getting posts: {str(e)}'}, status=500)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def toggleLike(request):
+    try:
+        try:
+            post = Post.objects.get(id=request.data['id'])
+        except Post.DoesNotExist:
+            return Response({'error': 'post is not found'})
+        
+        try:
+                user = MyUser.objects.get(username=request.user.username)
+        except MyUser.DoesNotExist:
+            return Response({'error':'users has not found'})
+        
+        if user in post.likes.all():
+            post.likes.remove(user)
+            return Response({'now_liked':False})
+        else:
+            post.likes.add(user)
+            return Response({'now_liked':True})
+    except:
+        return Response({'error': 'error liking the post'})

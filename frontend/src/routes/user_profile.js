@@ -1,19 +1,23 @@
 import { Flex, Text, VStack, Box, Heading, HStack, Image, Button, Divider, Spacer } from "@chakra-ui/react"
 import { useEffect, useState } from "react";
-import { get_user_profile_data, toggleFollow } from "../api/endpoints";
+import { get_user_profile_data, toggleFollow, get_users_posts } from "../api/endpoints";
 import { SERVER_URL } from "../constants/constants";
 import { useParams } from "react-router-dom";
+import Post from "../components/post";
 
 const UserProfile = () => {
 
     const { username } = useParams();
 
     return (
-        <Flex w="100%" justify="center" minH="100vh" py={10}>
+        <Flex w="100vw" justify="center" minH="100vh" py={10} flexDirection='column' alignItems='center'>
             <VStack w={{ base: "90%", md: "75%", lg: "60%" }} spacing={6} color="white">
-
                 {/* User Details Section */}
                 <UserDetails username={username} />
+            </VStack>
+            <VStack mt='5'>
+                {/* Posts Section */}
+                <UserPosts username={username} />
             </VStack>
         </Flex>
     )
@@ -119,12 +123,72 @@ const UserDetails = ({ username }) => {
     )
 }
 
-// Reusable Stats Box Component
 const StatBox = ({ label, count }) => (
     <VStack>
         <Text fontSize="xl" fontWeight="bold">{count}</Text>
         <Text fontSize="md" opacity={0.8}>{label}</Text>
     </VStack>
 )
+
+const UserPosts = ({ username }) => {
+
+    const [posts, setPosts] = useState([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const data = await get_users_posts(username)
+                setPosts(data)
+            } catch (err) {
+                alert('error getting users posts')
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchPosts()
+    }, [])
+
+    return (
+        <Flex
+            w='90%'
+            direction="column"
+            align="center"
+            p={4}
+            borderRadius="lg"
+            bg="gray.900"
+            boxShadow="lg"
+        >
+            {/* Section Header */}
+            <Text fontSize="2xl" fontWeight="bold" color="red.500" mb={4}>
+                Posts
+            </Text>
+
+            {/* Loading Indicator */}
+            {loading ? (
+                <Text color="gray.400">Loading posts...</Text>
+            ) : (
+                <VStack w="100%" spacing={4}>
+                    {posts.length > 0 ? (
+                        posts.map((post) => (
+                            <Post
+                                key={post.id}
+                                id={post.id}
+                                username={post.username}
+                                profile_image={`${SERVER_URL}${post.profile_image}`}
+                                description={post.description}
+                                formatted_date={post.formatted_date}
+                                liked={post.liked}
+                                like_count={post.like_count}
+                            />
+                        ))
+                    ) : (
+                        <Text color="gray.500">No posts yet.</Text>
+                    )}
+                </VStack>
+            )}
+        </Flex>
+    );
+}
 
 export default UserProfile;

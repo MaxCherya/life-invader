@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import MyUser
+from .models import MyUser, Post
 
 class UserRegisterSerializer(serializers.ModelSerializer):
 
@@ -34,3 +34,26 @@ class MyUserProfileSerializer(serializers.ModelSerializer):
     
     def get_following_count(self, obj):
         return obj.following.count()
+    
+class PostSerializer(serializers.ModelSerializer):
+
+    username = serializers.SerializerMethodField()
+    profile_image = serializers.SerializerMethodField()
+    like_count = serializers.SerializerMethodField()
+    formatted_date = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Post
+        fields = ['id', 'username', 'profile_image', 'description', 'formatted_date', 'likes', 'like_count']
+
+    def get_username(self, obj):
+        return obj.user.username
+    
+    def get_like_count(self, obj):
+        return obj.likes.count()
+    
+    def get_formatted_date(self, obj):
+        return obj.created_at.strftime("%d %b %y")
+    
+    def get_profile_image(self, obj):
+        return obj.user.profile_image.url if obj.user.profile_image else None
