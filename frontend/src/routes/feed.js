@@ -29,7 +29,7 @@ const Feed = () => {
     }, []);
 
     return (
-        <Flex w="100vw" minH="100vh" justify="center" align="center" py={10} bg="gray.900">
+        <Flex w="100vw" minH="85vh" justify="center" align="center" py={10} bg="gray.900">
             <VStack spacing={6} w={{ base: "90%", md: "75%", lg: "60%" }} color="white">
                 {/* Feed Header */}
                 <Heading fontSize="2xl" color="red.500">Feed</Heading>

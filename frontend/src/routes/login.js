@@ -12,7 +12,7 @@ const LoginPage = () => {
     };
 
     return (
-        <Box display="flex" justifyContent="center" alignItems="center" minH="100vh" py={10} bg="gray.900" color="white">
+        <Box display="flex" justifyContent="center" alignItems="center" minH="100svh" py={10} bg="gray.900" color="white">
             <VStack w={{ base: "90%", md: "400px" }} spacing={6} p={6} bg="gray.800" borderRadius="lg" boxShadow="lg">
                 {/* LifeInvader Logo + Slogan */}
                 <VStack spacing="0px" textAlign="center" color='red.500'>

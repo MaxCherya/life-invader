@@ -26,7 +26,7 @@ const CreatePostPage = () => {
     };
 
     return (
-        <Box display="flex" justifyContent="center" alignItems="center" minH="100vh" py={10} bg="gray.900" color="white">
+        <Box display="flex" justifyContent="center" alignItems="center" minH="85vh" py={10} bg="gray.900" color="white">
             <VStack w={{ base: "90%", md: "500px" }} spacing={6} p={6} bg="gray.800" borderRadius="lg" boxShadow="lg">
                 <Heading size="lg" color="red.500">Create a Post</Heading>
                 <Divider borderColor="gray.700" />

@@ -64,7 +64,7 @@ const Settings = () => {
 
     return (
         <Box
-            minH="100vh"
+            minH="85vh"
             bg="gray.900"
             color="white"
             px={6}

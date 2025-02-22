@@ -10,7 +10,7 @@ const UserProfile = () => {
     const { username } = useParams();
 
     return (
-        <Flex w="100vw" justify="center" minH="100vh" py={10} flexDirection='column' alignItems='center'>
+        <Flex w="100vw" justify="center" minH="85vh" py={10} flexDirection='column' alignItems='center'>
             <VStack w='60svw' spacing={6} color="white">
                 {/* User Details Section */}
                 <UserDetails username={username} />
