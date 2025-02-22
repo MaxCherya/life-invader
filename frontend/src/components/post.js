@@ -1,11 +1,13 @@
 import { VStack, Text, Box, HStack, Avatar, IconButton } from "@chakra-ui/react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toggleLike as toggleLikeAPI } from "../api/endpoints";
 
 const Post = ({ id, username, profile_image, description, formatted_date, liked, like_count }) => {
     const [isLiked, setLiked] = useState(liked);
     const [likes, setLikes] = useState(like_count);
+    const nav = useNavigate()
 
     const toggleLike = async () => {
         try {
@@ -34,7 +36,7 @@ const Post = ({ id, username, profile_image, description, formatted_date, liked,
             transition="0.3s"
         >
             {/* Header: Avatar & Username */}
-            <HStack spacing={3} align="center">
+            <HStack onClick={() => nav(`/${username}`)} spacing={3} align="center">
                 <Avatar name={username} size="sm" src={profile_image} />
                 <VStack align="start" spacing={0} flex="1">
                     <Text fontWeight="bold" color="white">@{username}</Text>

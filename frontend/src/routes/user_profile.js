@@ -134,18 +134,21 @@ const UserPosts = ({ username }) => {
 
     const [posts, setPosts] = useState([])
     const [loading, setLoading] = useState(true)
+    const [nextPage, setNextPage] = useState(1)
+
+    const fetchPosts = async () => {
+        try {
+            const data = await get_users_posts(username, nextPage);
+            setPosts((prevPosts) => [...prevPosts, ...data.results]);
+            setNextPage(data.next ? nextPage + 1 : null)
+        } catch (err) {
+            alert('error getting users posts')
+        } finally {
+            setLoading(false)
+        }
+    }
 
     useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                const data = await get_users_posts(username)
-                setPosts(data)
-            } catch (err) {
-                alert('error getting users posts')
-            } finally {
-                setLoading(false)
-            }
-        }
         fetchPosts()
     }, [])
 
@@ -186,6 +189,21 @@ const UserPosts = ({ username }) => {
                         <Text color="gray.500">No posts yet.</Text>
                     )}
                 </VStack>
+            )}
+
+            {/* Load More Button */}
+            {nextPage && !loading && (
+                <Button
+                    mt={4}
+                    w="full"
+                    maxW="300px"
+                    colorScheme="red"
+                    bg="red.600"
+                    _hover={{ bg: "red.700" }}
+                    onClick={fetchPosts}
+                >
+                    Load More Posts
+                </Button>
             )}
         </Flex>
     );

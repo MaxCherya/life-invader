@@ -124,14 +124,19 @@ def get_users_posts(request, pk):
         user = MyUser.objects.get(username=pk)
         my_user = MyUser.objects.get(username=request.user.username)
         posts = user.posts.all().order_by('-created_at')
-        serializer = PostSerializer(posts, many=True)
+
+        paginator = PageNumberPagination()
+        paginator.page_size = 4
+        result_pages = paginator.paginate_queryset(posts, request)
+
+        serializer = PostSerializer(result_pages, many=True)
 
         data = []
         for post in serializer.data:
             liked = my_user.username in post.get('likes', [])
             data.append({**post, 'liked': liked})
 
-        return Response(data)
+        return paginator.get_paginated_response(data)
     except MyUser.DoesNotExist:
         return Response({'error': 'user does not exist'}, status=404)
     except Exception as e:
@@ -189,7 +194,7 @@ def getPosts(request):
         posts = Post.objects.all().order_by('-created_at')
 
         paginator = PageNumberPagination()
-        paginator.page_size = 2
+        paginator.page_size = 4
 
         result_pages = paginator.paginate_queryset(posts, request)
         serializer = PostSerializer(result_pages, many=True)

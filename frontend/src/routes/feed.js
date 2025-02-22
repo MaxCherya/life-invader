@@ -15,8 +15,8 @@ const Feed = () => {
         try {
             const data = await getPosts(nextPage);
 
-            setPosts((prevPosts) => [...prevPosts, ...data.results]); // Append new posts
-            setNextPage(data.next ? nextPage + 1 : null); // Update next page
+            setPosts((prevPosts) => [...prevPosts, ...data.results]);
+            setNextPage(data.next ? nextPage + 1 : null);
         } catch (err) {
             console.error("Error fetching posts:", err);
         } finally {

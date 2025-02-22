@@ -1,6 +1,7 @@
 import { Flex, HStack, Text, VStack, IconButton, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, useDisclosure, useBreakpointValue } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import { username } from "../constants/constants";
 
 const Navbar = () => {
     const nav = useNavigate();
@@ -17,7 +18,7 @@ const Navbar = () => {
         <Flex w="100vw" h="90px" bg="#c0392b" justifyContent="center" alignItems="center" px={5}>
             <HStack justifyContent="space-between" w="100%" maxW="1200px">
                 {/* LifeInvader Logo + Slogan */}
-                <VStack spacing="0px" textAlign="center">
+                <VStack onClick={() => nav('/feed')} spacing="0px" textAlign="center" _hover={{ cursor: 'pointer' }}>
                     <Text fontSize="3xl" color="white" lineHeight="1">
                         <Text as="span" fontWeight="bold">Life</Text>Invader
                     </Text>
@@ -29,7 +30,7 @@ const Navbar = () => {
                 {/* Desktop Navigation */}
                 {!isMobile ? (
                     <HStack spacing={6}>
-                        <Text color="white" fontSize="lg" cursor="pointer" _hover={{ opacity: 0.8 }} onClick={() => handleNavigate("maxchergik")}>
+                        <Text color="white" fontSize="lg" cursor="pointer" _hover={{ opacity: 0.8 }} onClick={() => handleNavigate(username)}>
                             Profile
                         </Text>
                         <Text color="white" fontSize="lg" cursor="pointer" _hover={{ opacity: 0.8 }} onClick={() => handleNavigate("settings")}>
