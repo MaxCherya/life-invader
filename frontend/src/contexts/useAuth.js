@@ -2,7 +2,6 @@ import { createContext, useContext, useState, useEffect, useRef } from 'react'
 import { get_auth } from '../api/endpoints';
 import { useNavigate } from 'react-router-dom'
 import { login } from "../api/endpoints";
-import { setUsername } from '../constants/constants';
 
 const AuthContext = createContext();
 
@@ -29,7 +28,15 @@ export const AuthProvider = ({ children }) => {
         const data = await login(username, password)
         if (data.success) {
             setAuth(true)
-            setUsername(username)
+            const userData = {
+                "username": data.user.username,
+                "bio": data.user.bio,
+                "email": data.user.email,
+                "first_name": data.user.first_name,
+                "last_name": data.user.last_name,
+                "profile_image": data.user.profile_image,
+            }
+            localStorage.setItem('userData', JSON.stringify(userData))
             navigate('/feed')
         } else {
             alert('Invalid username or password')

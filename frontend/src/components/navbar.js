@@ -1,7 +1,6 @@
 import { Flex, HStack, Text, VStack, IconButton, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, useDisclosure, useBreakpointValue } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import { username } from "../constants/constants";
 
 const Navbar = () => {
     const nav = useNavigate();
@@ -30,7 +29,7 @@ const Navbar = () => {
                 {/* Desktop Navigation */}
                 {!isMobile ? (
                     <HStack spacing={6}>
-                        <Text color="white" fontSize="lg" cursor="pointer" _hover={{ opacity: 0.8 }} onClick={() => handleNavigate(username)}>
+                        <Text color="white" fontSize="lg" cursor="pointer" _hover={{ opacity: 0.8 }} onClick={() => handleNavigate("maxchergik")}>
                             Profile
                         </Text>
                         <Text color="white" fontSize="lg" cursor="pointer" _hover={{ opacity: 0.8 }} onClick={() => handleNavigate("settings")}>

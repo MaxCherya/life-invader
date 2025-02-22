@@ -31,10 +31,25 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         try:
             response = super().post(request, *args, **kwargs)
             tokens = response.data
+
             access_token = tokens['access']
             refresh_token = tokens['refresh']
+            username = request.data['username']
+            try:
+                user = MyUser.objects.get(username=username)
+            except MyUser.DoesNotExist:
+                return Response({'error':'users has not found'})
+
             res = Response()
-            res.data = {'success':True}
+            res.data = {'success':True, 
+                        "user": {
+                            "username":user.username,
+                            "bio":user.bio,
+                            "email":user.email,
+                            "first_name":user.first_name,
+                            "last_name":user.last_name,
+                            "profile_image": user.profile_image.url if user.profile_image else None
+                        }}
 
             res.set_cookie(
                 key='access_token',
@@ -220,3 +235,35 @@ def search_users(request):
     users = MyUser.objects.filter(username__icontains=query)
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_user_details(request):
+
+    data = request.data
+
+    try:
+        user = MyUser.objects.get(username=request.user.username)
+    except MyUser.DoesNotExist:
+        return Response({'error':'users has not found'})
+    
+    serializer = UserSerializer(user, data, partial=True)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'success':True, 'profile_image': user.profile_image.url, 'username': user.username, 'first_name': user.first_name, 'last_name': user.last_name, 'bio': user.bio})
+    
+    return Response({'success':False})
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def logout(request):
+
+    try:
+        res = Response()
+        res.data = {'success':True}
+        res.delete_cookie('access_token', path='/', samesite='None')
+        res.delete_cookie('refresh_token', path='/', samesite='None')
+        return res
+    except:
+        return Response({'success':False})

@@ -12,6 +12,7 @@ import PrivateRoute from './components/private_route';
 import CreatePostPage from './routes/create_post';
 import Feed from './routes/feed';
 import Search from './routes/search';
+import Settings from './routes/settings';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route element={<Layout><PrivateRoute><CreatePostPage /></PrivateRoute></Layout>} path='/create-post' />
             <Route element={<Layout><PrivateRoute><Feed /></PrivateRoute></Layout>} path='/feed' />
             <Route element={<Layout><PrivateRoute><Search /></PrivateRoute></Layout>} path='/search' />
+            <Route element={<Layout><PrivateRoute><Settings /></PrivateRoute></Layout>} path='/settings' />
           </Routes>
         </AuthProvider>
       </Router>
