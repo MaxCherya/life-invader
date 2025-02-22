@@ -36,7 +36,7 @@ const Post = ({ id, username, profile_image, description, formatted_date, liked,
             transition="0.3s"
         >
             {/* Header: Avatar & Username */}
-            <HStack onClick={() => nav(`/${username}`)} spacing={3} align="center">
+            <HStack onClick={() => nav(`/${username}`)} spacing={3} align="center" _hover={{ cursor: 'pointer' }}>
                 <Avatar name={username} size="sm" src={profile_image} />
                 <VStack align="start" spacing={0} flex="1">
                     <Text fontWeight="bold" color="white">@{username}</Text>

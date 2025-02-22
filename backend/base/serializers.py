@@ -57,3 +57,8 @@ class PostSerializer(serializers.ModelSerializer):
     
     def get_profile_image(self, obj):
         return obj.user.profile_image.url if obj.user.profile_image else None
+    
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MyUser
+        fields = ['username', 'profile_image', 'first_name', 'last_name']
