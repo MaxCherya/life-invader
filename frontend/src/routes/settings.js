@@ -39,7 +39,7 @@ const Settings = () => {
         try {
             const updatedUser = await update_user(formData);
 
-            if (updatedUser) {
+            if (updatedUser.success) {
                 const newUserData = {
                     username: updatedUser.username,
                     first_name: updatedUser.first_name,
@@ -53,14 +53,22 @@ const Settings = () => {
 
                 alert("Profile updated successfully!");
             } else {
-                alert("Error: No response from server.");
+                if (updatedUser.errors) {
+                    const errorMessages = Object.values(updatedUser.errors).flat().join("\n");
+                    alert(`Error: ${errorMessages}`);
+                } else {
+                    alert("An unknown error occurred.");
+                }
             }
         } catch (error) {
-            console.error("Error updating profile:", error);
-            alert("Error updating profile. Please try again.");
+            if (error.response && error.response.data.errors) {
+                const errorMessages = Object.values(error.response.data.errors).flat().join("\n");
+                alert(`Error: ${errorMessages}`);
+            } else {
+                alert("Error updating profile. Please try again.");
+            }
         }
     };
-
 
     return (
         <Box
@@ -114,7 +122,7 @@ const Settings = () => {
                     <FormLabel>Username</FormLabel>
                     <Input
                         value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        isReadOnly
                         bg="gray.700"
                         focusBorderColor="red.500"
                         color="white"

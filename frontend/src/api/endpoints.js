@@ -88,6 +88,20 @@ export const logout = async () => {
 }
 
 export const update_user = async (values) => {
-    const response = await api.patch('/update-user/', values, { headers: { 'Content-Type': 'multipart/form-data' } })
+    try {
+        const response = await api.patch('/update-user/', values, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        return response.data;
+    } catch (error) {
+        if (error.response) {
+            return error.response.data;
+        }
+        return { success: false, error: "Something went wrong." };
+    }
+};
+
+export const auth_google = async (code) => {
+    const response = await api.post('/auth/google/', { code })
     return response.data
 }

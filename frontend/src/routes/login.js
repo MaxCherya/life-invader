@@ -1,15 +1,28 @@
 import { useState } from "react";
-import { Box, Input, Button, VStack, Heading, Text, Link, Divider } from "@chakra-ui/react";
+import { Box, Input, Button, VStack, Text, Link, Divider } from "@chakra-ui/react";
 import { useAuth } from "../contexts/useAuth";
+import { useGoogleLogin } from '@react-oauth/google';
 
 const LoginPage = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const { auth_login } = useAuth();
+    const { auth_login, auth_login_google } = useAuth();
 
     const handleLogin = async () => {
         auth_login(username, password)
     };
+
+    const handleGoogleLogin = useGoogleLogin({
+        flow: 'auth-code',
+        onSuccess: async (response) => {
+            console.log('Authorization Code:', response.code);
+            await auth_login_google(response.code);
+        },
+        onError: () => {
+            console.error('Google Login Failed');
+            alert('Login failed');
+        },
+    });
 
     return (
         <Box display="flex" justifyContent="center" alignItems="center" minH="100svh" py={10} bg="gray.900" color="white">
@@ -48,6 +61,9 @@ const LoginPage = () => {
                 <Text>
                     Don't have an account? <Link color="red.400" href="/register">Create New Account</Link>
                 </Text>
+                <button onClick={handleGoogleLogin} style={{ width: "100%" }}>
+                    Login with Google
+                </button>
             </VStack>
         </Box>
     );

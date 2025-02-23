@@ -1,7 +1,8 @@
-import { Flex, Text, VStack, Box, Heading, HStack, Image, Button, Divider, Spacer } from "@chakra-ui/react"
+import { Flex, Text, VStack, Box, Heading, HStack, Avatar, Button, Divider, Spacer } from "@chakra-ui/react"
 import { useEffect, useState } from "react";
 import { get_user_profile_data, toggleFollow, get_users_posts } from "../api/endpoints";
 import { SERVER_URL } from "../constants/constants";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Post from "../components/post";
 
@@ -32,6 +33,8 @@ const UserDetails = ({ username }) => {
     const [followingCount, setFollowingCount] = useState(0)
     const [isOurProfile, setIsOurProfile] = useState(false)
     const [isFollowing, setIsFollowing] = useState(false)
+
+    const nav = useNavigate()
 
     const handleToggleFollow = async () => {
         try {
@@ -81,7 +84,7 @@ const UserDetails = ({ username }) => {
             {/* Profile Image & Username */}
             <VStack spacing={3}>
                 <Box boxSize="120px" border="2px solid" borderColor="gray.600" borderRadius="full" overflow="hidden">
-                    <Image src={loading ? '' : `${SERVER_URL}${profileImage}`} boxSize="100%" objectFit="cover" />
+                    <Avatar src={loading ? '' : `${SERVER_URL}${profileImage}`} boxSize="100%" objectFit="cover" />
                 </Box>
                 <Heading fontSize="2xl">@{username}</Heading>
                 {/* Bio Section */}
@@ -100,7 +103,7 @@ const UserDetails = ({ username }) => {
 
             {loading ? <Spacer /> : isOurProfile ?
                 /* Edit Profile Button */
-                <Button w="full" colorScheme="red" bg="gray.700" _hover={{ bg: "gray.600" }}>
+                <Button w="full" onClick={() => nav('/settings')} colorScheme="red" bg="gray.700" _hover={{ bg: "gray.600" }}>
                     Edit Profile
                 </Button>
                 :
