@@ -364,8 +364,12 @@ def getPosts(request):
 @permission_classes([IsAuthenticated])
 def search_users(request):
     query = request.query_params.get('query', '')
-    users = MyUser.objects.filter(username__icontains=query)
-    serializer = UserSerializerSearch(users, many=True)
+    try:
+        user = MyUser.objects.get(username=request.user.username)
+    except MyUser.DoesNotExist:
+        return Response({'error': 'User not found'}, status=404)
+    users = MyUser.objects.filter(username__icontains=query).exclude(username=user.username)
+    serializer = UserSerializerSearch(users, many=True, context={'request': request})
     return Response(serializer.data)
 
 @api_view(['PATCH'])

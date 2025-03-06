@@ -73,6 +73,14 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['profile_image', 'bio', 'email', 'first_name', 'last_name']
 
 class UserSerializerSearch(serializers.ModelSerializer):
+    following_status = serializers.SerializerMethodField()
+
     class Meta:
         model = MyUser
-        fields = ['username', 'profile_image', 'bio', 'email', 'first_name', 'last_name']
+        fields = ['username', 'profile_image', 'bio', 'email', 'first_name', 'last_name', 'following_status']
+
+    def get_following_status(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return request.user.following.filter(username=obj.username).exists()
+        return False

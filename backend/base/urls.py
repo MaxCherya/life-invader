@@ -1,8 +1,5 @@
 from django.urls import path, include
 
-from django.conf import settings
-from django.conf.urls.static import static
-
 from .views import (get_user_profile_data, CustomTokenObtainPairView, 
                     CustomTokenRefreshView, register, authenticated, toggleFollow, 
                     get_users_posts, toggleLike, create_post, getPosts, search_users, logout, update_user_details,
@@ -24,4 +21,4 @@ urlpatterns = [
     path('logout/', logout),
     path('auth/google/', google_login, name='google_login'),
     path('accounts/', include('allauth.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]

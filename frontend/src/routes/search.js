@@ -9,8 +9,13 @@ const Search = () => {
     const [results, setResults] = useState([]);
 
     const handleSearch = async () => {
+        if (query.length < 3) {
+            alert('Enter at least 3 letters to search')
+            return
+        }
         const data = await search_users(query);
         setResults(data);
+        console.log(data)
     };
 
     return (
@@ -71,6 +76,7 @@ const Search = () => {
                             first_name={user.first_name}
                             last_name={user.last_name}
                             profile_image={user.profile_image}
+                            followingState={user.following_status}
                         />
                     ))
                 )}
